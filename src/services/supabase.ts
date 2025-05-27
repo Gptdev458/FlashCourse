@@ -1,13 +1,23 @@
 import { createClient } from '@supabase/supabase-js';
 
+// Add environment validation with detailed logging
+console.log('FlashCourse: Checking environment variables...');
+console.log('VITE_SUPABASE_URL exists:', !!import.meta.env.VITE_SUPABASE_URL);
+console.log('VITE_SUPABASE_ANON_KEY exists:', !!import.meta.env.VITE_SUPABASE_ANON_KEY);
+
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
+  const error = 'Missing Supabase environment variables';
+  console.error('FlashCourse Error:', error);
+  console.error('Available env vars:', Object.keys(import.meta.env));
+  throw new Error(error);
 }
 
+console.log('FlashCourse: Creating Supabase client...');
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+console.log('FlashCourse: Supabase client created successfully');
 
 // Database types based on our schema
 export interface Database {
