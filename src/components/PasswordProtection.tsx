@@ -1,70 +1,124 @@
 import React, { useState } from 'react';
-import { Lock } from 'lucide-react';
 
 interface PasswordProtectionProps {
-  onAuthenticated: () => void;
+  onCorrectPassword: () => void;
 }
 
-export const PasswordProtection: React.FC<PasswordProtectionProps> = ({ onAuthenticated }) => {
+export const PasswordProtection: React.FC<PasswordProtectionProps> = ({ onCorrectPassword }) => {
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'hello') {
-      localStorage.setItem('flashcourse-authenticated', 'true');
-      onAuthenticated();
+    if (password.toLowerCase().trim() === 'hello') {
+      onCorrectPassword();
     } else {
-      setError('Incorrect password');
+      setError(true);
       setPassword('');
+      setTimeout(() => setError(false), 2000);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
-      <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <Lock className="h-8 w-8 text-blue-600" />
-            </div>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">FlashCourse</h1>
-          <p className="text-gray-600">Please enter the password to access the application</p>
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#f8fafc',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      padding: '1rem'
+    }}>
+      <div style={{
+        backgroundColor: 'white',
+        borderRadius: '12px',
+        padding: '2rem',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+        width: '100%',
+        maxWidth: '400px'
+      }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <h1 style={{
+            fontSize: '1.875rem',
+            fontWeight: 'bold',
+            color: '#1f2937',
+            margin: '0 0 0.5rem 0'
+          }}>
+            FlashCourse
+          </h1>
+          <p style={{
+            color: '#6b7280',
+            margin: 0,
+            fontSize: '0.875rem'
+          }}>
+            Enter password to continue
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-              Password
-            </label>
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '1.5rem' }}>
             <input
               type="password"
-              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter password"
-              required
+              placeholder="Password"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: error ? '2px solid #ef4444' : '1px solid #d1d5db',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                outline: 'none',
+                transition: 'border-color 0.2s',
+                boxSizing: 'border-box'
+              }}
+              onFocus={(e) => {
+                if (!error) e.target.style.borderColor = '#3b82f6';
+              }}
+              onBlur={(e) => {
+                if (!error) e.target.style.borderColor = '#d1d5db';
+              }}
             />
             {error && (
-              <p className="mt-2 text-sm text-red-600">{error}</p>
+              <p style={{
+                color: '#ef4444',
+                fontSize: '0.875rem',
+                margin: '0.5rem 0 0 0'
+              }}>
+                Incorrect password
+              </p>
             )}
           </div>
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 font-medium"
+            disabled={!password.trim()}
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              backgroundColor: !password.trim() ? '#9ca3af' : '#3b82f6',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '1rem',
+              fontWeight: '500',
+              cursor: !password.trim() ? 'not-allowed' : 'pointer',
+              transition: 'background-color 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              if (password.trim()) {
+                e.currentTarget.style.backgroundColor = '#2563eb';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (password.trim()) {
+                e.currentTarget.style.backgroundColor = '#3b82f6';
+              }
+            }}
           >
-            Access FlashCourse
+            Enter
           </button>
         </form>
-
-        <div className="mt-6 text-center">
-          <p className="text-xs text-gray-500">
-            AI-powered micro-learning platform
-          </p>
-        </div>
       </div>
     </div>
   );

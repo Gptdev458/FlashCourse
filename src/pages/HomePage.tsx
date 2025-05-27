@@ -33,11 +33,6 @@ export default function HomePage() {
     await createCourse(config);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('flashcourse-authenticated');
-    window.location.reload();
-  };
-
   const styles = {
     container: {
       minHeight: '100vh',
@@ -55,26 +50,12 @@ export default function HomePage() {
       height: '64px',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'space-between'
+      justifyContent: 'center'
     },
     logo: {
       fontSize: '24px',
       fontWeight: 'bold',
       color: '#2563eb'
-    },
-    logoutButton: {
-      padding: '8px 16px',
-      fontSize: '14px',
-      color: '#6b7280',
-      backgroundColor: 'transparent',
-      border: '1px solid #d1d5db',
-      borderRadius: '6px',
-      cursor: 'pointer',
-      transition: 'all 0.2s'
-    },
-    logoutButtonHover: {
-      backgroundColor: '#f3f4f6',
-      color: '#374151'
     },
     main: {
       maxWidth: '672px',
@@ -217,7 +198,6 @@ export default function HomePage() {
   const [selectDepthFocused, setSelectDepthFocused] = useState(false);
   const [selectComplexityFocused, setSelectComplexityFocused] = useState(false);
   const [buttonHovered, setButtonHovered] = useState(false);
-  const [logoutHovered, setLogoutHovered] = useState(false);
 
   const isButtonDisabled = isLoading || !config.topic.trim();
 
@@ -235,17 +215,6 @@ export default function HomePage() {
       <nav style={styles.nav}>
         <div style={styles.navContent}>
           <div style={styles.logo}>FlashCourse</div>
-          <button 
-            onClick={handleLogout}
-            onMouseEnter={() => setLogoutHovered(true)}
-            onMouseLeave={() => setLogoutHovered(false)}
-            style={{
-              ...styles.logoutButton,
-              ...(logoutHovered ? styles.logoutButtonHover : {})
-            }}
-          >
-            Logout
-          </button>
         </div>
       </nav>
 

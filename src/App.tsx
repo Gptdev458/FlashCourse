@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CourseProvider } from './context/CourseContext';
 import { PasswordProtection } from './components/PasswordProtection';
@@ -7,22 +7,10 @@ import ConfirmationPage from './pages/ConfirmationPage';
 import LessonViewerPage from './pages/LessonViewerPage';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [hasAccess, setHasAccess] = useState(false);
 
-  useEffect(() => {
-    // Check if user is already authenticated
-    const authenticated = localStorage.getItem('flashcourse-authenticated');
-    if (authenticated === 'true') {
-      setIsAuthenticated(true);
-    }
-  }, []);
-
-  const handleAuthenticated = () => {
-    setIsAuthenticated(true);
-  };
-
-  if (!isAuthenticated) {
-    return <PasswordProtection onAuthenticated={handleAuthenticated} />;
+  if (!hasAccess) {
+    return <PasswordProtection onCorrectPassword={() => setHasAccess(true)} />;
   }
 
   return (
